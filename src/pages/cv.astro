@@ -1,0 +1,45 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import Base from '../layouts/Base.astro';
+import Section from '../components/Section.astro';
+import { withBase } from '../lib/url';
+
+// Put the PDF at public/cv/holly-mchugh-cv.pdf and this page picks it up.
+const pdfPath = '/cv/holly-mchugh-cv.pdf';
+const hasPdf = fs.existsSync(path.join(process.cwd(), 'public', pdfPath));
+const pdfUrl = withBase(pdfPath);
+---
+
+<Base title="CV" description="Holly McHugh's CV: education, experience and skills.">
+  <Section tone="light" label="CV">
+    <h1 class="display">CV</h1>
+    {
+      hasPdf ? (
+        <>
+          <p>
+            <a class="btn" href={pdfUrl} download>Download PDF</a>
+          </p>
+          <object class="pdf" data={pdfUrl} type="application/pdf" aria-label="CV as PDF">
+            <p>
+              Your browser can't show the PDF here. <a href={pdfUrl}>Open it directly</a>.
+            </p>
+          </object>
+        </>
+      ) : (
+        <p class="lede">The PDF is on its way. In the meantime, everything on it is on the <a href={withBase('/')}>home page</a>.</p>
+      )
+    }
+  </Section>
+</Base>
+
+<style>
+  .pdf {
+    display: block;
+    width: 100%;
+    height: min(80vh, 60rem);
+    border: 2px solid var(--indigo);
+    border-radius: 4px;
+    background: #fff;
+  }
+</style>

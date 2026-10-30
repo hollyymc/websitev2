@@ -1,0 +1,60 @@
+---
+import Polaroid from './Polaroid.astro';
+import Arrow from './Arrow.astro';
+import { withBase } from '../lib/url';
+import type { Project } from '../data/projects';
+
+interface Props {
+  project: Project;
+}
+
+const { project: p } = Astro.props;
+const href = p.status === 'live' ? withBase(`/projects/${p.slug}`) : undefined;
+---
+
+<li class={`obj ${p.size} arrow-${p.arrow}`} style={`--col:${p.pos.col};--row:${p.pos.row}`}>
+  <Polaroid
+    title={p.title}
+    summary={p.summary}
+    tags={p.tags}
+    rot={p.rot}
+    href={href}
+    image={p.image}
+    imageAlt={p.imageAlt}
+    size={p.size}
+  />
+  <p class="caption hand">
+    <span>{p.caption}</span>
+    <Arrow dir={p.arrow} />
+  </p>
+</li>
+
+<style>
+  .obj {
+    list-style: none;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .obj > :global(.polaroid) {
+    width: 100%;
+    max-width: 18rem;
+  }
+  .obj.sm > :global(.polaroid) {
+    max-width: 14rem;
+  }
+  .caption {
+    margin: 0.5rem 0 0;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  @media (min-width: 760px) {
+    .obj {
+      grid-column: var(--col);
+      grid-row: var(--row);
+    }
+  }
+</style>

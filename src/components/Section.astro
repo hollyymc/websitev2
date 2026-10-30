@@ -1,0 +1,16 @@
+---
+interface Props {
+  tone?: 'dark' | 'forest' | 'light' | 'indigo';
+  id?: string;
+  label?: string;
+}
+
+const { tone = 'light', id, label } = Astro.props;
+---
+
+<section class={`block tone-${tone}`} id={id} aria-label={label}>
+  <div class="wrap">
+    <slot />
+  </div>
+  <slot name="decor" />
+</section>

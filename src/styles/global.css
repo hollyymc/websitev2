@@ -1,0 +1,206 @@
+/* Design tokens: change the palette here. */
+:root {
+  --spruce: #0f2a28;
+  --forest: #1f4d3f;
+  --indigo: #3b3a8c;
+  --lavender: #c9b8f0;
+  --paper: #f5f3fa;
+  --ink: #14201f;
+
+  --font-display: 'Bricolage Grotesque Variable', 'Bricolage Grotesque', system-ui, sans-serif;
+  --font-hand: 'Caveat Brush', 'Segoe Print', cursive;
+  --font-body: 'DM Sans Variable', 'DM Sans', system-ui, sans-serif;
+
+  --gutter: clamp(1rem, 4vw, 3rem);
+  --maxw: 72rem;
+
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+svg {
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--lavender);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  background: var(--lavender);
+  color: var(--spruce);
+  padding: 0.5rem 1rem;
+  z-index: 100;
+}
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* Alternating dark and light blocks */
+.block {
+  background: var(--bg);
+  color: var(--fg);
+  padding-block: clamp(3rem, 8vw, 6rem);
+  padding-inline: var(--gutter);
+  position: relative;
+  overflow: hidden;
+}
+.tone-dark {
+  --bg: var(--spruce);
+  --fg: #eef0ee;
+  --accent: var(--lavender);
+}
+.tone-forest {
+  --bg: var(--forest);
+  --fg: #eef0ee;
+  --accent: var(--lavender);
+}
+.tone-light {
+  --bg: var(--paper);
+  --fg: var(--ink);
+  --accent: var(--indigo);
+}
+.tone-indigo {
+  --bg: var(--indigo);
+  --fg: #ffffff;
+  --accent: var(--lavender);
+}
+
+.wrap {
+  max-width: var(--maxw);
+  margin-inline: auto;
+  position: relative;
+}
+
+/* Type */
+.display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 1.5rem;
+}
+h1.display {
+  font-size: clamp(3rem, 11vw, 7.5rem);
+}
+h2.display {
+  font-size: clamp(2.2rem, 6vw, 4.25rem);
+}
+h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  margin: 0 0 0.25rem;
+  line-height: 1.15;
+}
+.hand {
+  font-family: var(--font-hand);
+  color: var(--accent);
+  line-height: 1.1;
+}
+.lede {
+  font-size: clamp(1.15rem, 2.2vw, 1.4rem);
+  max-width: 38rem;
+}
+p {
+  margin: 0 0 1rem;
+}
+.muted {
+  opacity: 0.75;
+}
+
+/* Buttons and links */
+.btn {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-decoration: none;
+  padding: 0.7rem 1.4rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--bg);
+  border: 2px solid var(--accent);
+  transition: transform 0.15s ease;
+}
+.btn:hover {
+  transform: translateY(-2px) rotate(-1deg);
+}
+.btn.ghost {
+  background: transparent;
+  color: var(--accent);
+}
+.link-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+}
+.link-row a {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--accent);
+  text-underline-offset: 4px;
+}
+
+/* Sticker-style tag */
+.sticker {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--bg);
+  transform: rotate(var(--r, 0deg));
+}
+
+.prose {
+  max-width: 42rem;
+}
+.prose h2 {
+  font-family: var(--font-display);
+  margin-top: 2rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -1,0 +1,30 @@
+---
+import { site } from '../data/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer>
+  <p>© {year} {site.name}</p>
+  <p>
+    <a href={site.links.github} rel="noopener">GitHub</a> ·
+    <a href={site.links.linkedin} rel="noopener">LinkedIn</a> ·
+    <a href={`mailto:${site.email}`}>Email</a>
+  </p>
+</footer>
+
+<style>
+  footer {
+    background: var(--spruce);
+    color: var(--lavender);
+    padding: 1.5rem var(--gutter);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem 1.5rem;
+    font-size: 0.95rem;
+  }
+  p {
+    margin: 0;
+  }
+</style>

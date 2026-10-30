@@ -1,0 +1,101 @@
+---
+import Base from '../../layouts/Base.astro';
+import Section from '../../components/Section.astro';
+import FilmStrip from '../../components/FilmStrip.astro';
+import { projects } from '../../data/projects';
+import type { Project } from '../../data/projects';
+import { withBase } from '../../lib/url';
+
+export function getStaticPaths() {
+  return projects
+    .filter((p) => p.status === 'live')
+    .map((project) => ({ params: { slug: project.slug }, props: { project } }));
+}
+
+interface Props {
+  project: Project;
+}
+
+const { project: p } = Astro.props;
+
+const blocks = [
+  { heading: 'Problem', body: p.problem },
+  { heading: 'Approach', body: p.approach },
+  { heading: 'Results', body: p.results },
+  { heading: 'My role', body: p.role },
+].filter((b) => b.body);
+---
+
+<Base title={p.title} description={p.summary}>
+  <Section tone="dark" label={p.title}>
+    <p><a href={withBase('/projects')}>← All projects</a></p>
+    <h1 class="display">{p.title}</h1>
+    {p.context && <p class="hand ctx">{p.context}</p>}
+    <p class="lede">{p.summary}</p>
+    {
+      p.tags.length > 0 && (
+        <ul class="tags">
+          {p.tags.map((t, i) => (
+            <li class="sticker" style={`--r:${i % 2 ? 2 : -2}deg`}>{t}</li>
+          ))}
+        </ul>
+      )
+    }
+  </Section>
+
+  <Section tone="light" label="Write-up">
+    <div class="layout">
+      <div class="prose">
+        {
+          blocks.map((b) => (
+            <>
+              <h2 class="display">{b.heading}</h2>
+              <p>{b.body}</p>
+            </>
+          ))
+        }
+        {
+          p.links && p.links.length > 0 && (
+            <ul class="link-row">
+              {p.links.map((l) => (
+                <li>
+                  <a href={l.href} rel="noopener">{l.label}</a>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+      </div>
+      {
+        p.image && (
+          <FilmStrip frames={[{ label: p.title, image: p.image, imageAlt: p.imageAlt }]} />
+        )
+      }
+    </div>
+  </Section>
+</Base>
+
+<style>
+  .ctx {
+    font-size: 1.6rem;
+    margin: 0 0 0.75rem;
+  }
+  .tags {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0;
+    margin: 1rem 0 0;
+  }
+  .layout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem 4rem;
+    align-items: flex-start;
+  }
+  .prose .display {
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    margin-bottom: 0.5rem;
+  }
+</style>

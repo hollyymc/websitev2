@@ -1,0 +1,42 @@
+---
+// Decorative circular text, as in the portfolio deck reference.
+interface Props {
+  text: string;
+  size?: number;
+}
+
+const { text, size = 220 } = Astro.props;
+const id = `ring-${Math.random().toString(36).slice(2, 8)}`;
+const repeated = `${text} · `.repeat(3);
+---
+
+<svg
+  class="ring"
+  viewBox="0 0 200 200"
+  width={size}
+  height={size}
+  aria-hidden="true"
+  focusable="false"
+>
+  <defs>
+    <path id={id} d="M100,100 m-80,0 a80,80 0 1,1 160,0 a80,80 0 1,1 -160,0"></path>
+  </defs>
+  <text font-size="17" fill="currentColor">
+    <textPath href={`#${id}`} textLength="495" lengthAdjust="spacing">{repeated}</textPath>
+  </text>
+</svg>
+
+<style>
+  .ring {
+    font-family: var(--font-hand);
+    color: var(--accent);
+    opacity: 0.35;
+    animation: spin 60s linear infinite;
+    pointer-events: none;
+  }
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+</style>

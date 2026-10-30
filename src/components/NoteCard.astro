@@ -1,0 +1,90 @@
+---
+import { note } from '../data/note';
+import { withBase } from '../lib/url';
+
+const external = note.mode === 'link';
+const href = external ? note.href : withBase(`/notes/${note.slug}`);
+const date = new Date(note.date).toLocaleDateString('en-GB', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+});
+---
+
+{
+  !note.hidden && (
+    <a
+      class="note"
+      href={href}
+      target={external ? '_blank' : undefined}
+      rel={external ? 'noopener' : undefined}
+    >
+      <span class="tape" aria-hidden="true" />
+      <p class="hand label">latest note</p>
+      <h3>{note.title}</h3>
+      <p class="teaser">{note.teaser}</p>
+      <p class="foot">
+        <time datetime={note.date}>{date}</time>
+        <span class="read">Read{external ? ' ↗' : ' →'}</span>
+      </p>
+    </a>
+  )
+}
+
+<style>
+  .note {
+    position: relative;
+    display: block;
+    max-width: 26rem;
+    background: var(--paper);
+    color: var(--ink);
+    padding: 1.75rem 1.5rem 1.25rem;
+    text-decoration: none;
+    transform: rotate(-1.5deg);
+    box-shadow: 0 10px 28px rgb(0 0 0 / 0.35);
+    /* ruled notebook lines */
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0 1.7rem,
+      #d8d2ea 1.7rem calc(1.7rem + 1px)
+    );
+    transition: transform 0.2s ease;
+  }
+  .note:hover,
+  .note:focus-visible {
+    transform: rotate(0deg) translateY(-4px);
+  }
+  .tape {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    width: 6rem;
+    height: 1.5rem;
+    margin-left: -3rem;
+    background: rgb(201 184 240 / 0.85);
+    transform: rotate(3deg);
+  }
+  .label {
+    --accent: var(--indigo);
+    margin: 0;
+    font-size: 1.4rem;
+  }
+  h3 {
+    color: var(--indigo);
+    font-size: 1.4rem;
+  }
+  .teaser {
+    margin: 0.5rem 0 1rem;
+  }
+  .foot {
+    display: flex;
+    justify-content: space-between;
+    margin: 0;
+    font-size: 0.9rem;
+  }
+  .read {
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--indigo);
+  }
+</style>

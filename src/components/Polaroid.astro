@@ -1,0 +1,135 @@
+---
+import { withBase } from '../lib/url';
+
+interface Props {
+  title: string;
+  summary?: string;
+  tags?: string[];
+  rot?: number;
+  href?: string;
+  image?: string;
+  imageAlt?: string;
+  size?: 'lg' | 'sm';
+}
+
+const { title, summary, tags = [], rot = 0, href, image, imageAlt = '', size = 'lg' } = Astro.props;
+const Tag = href ? 'a' : 'div';
+---
+
+<Tag class={`polaroid ${size}`} href={href} style={`--rot:${rot}deg`}>
+  <span class="pin" aria-hidden="true"></span>
+  <div class="frame">
+    {
+      image ? (
+        <img src={withBase(image)} alt={imageAlt} loading="lazy" />
+      ) : (
+        <div class="blank" aria-hidden="true">
+          <span>coming soon</span>
+        </div>
+      )
+    }
+  </div>
+  <div class="meta">
+    <h3>{title}</h3>
+    {summary && <p>{summary}</p>}
+    {
+      tags.length > 0 && (
+        <p class="tags">
+          {tags.map((t, i) => (
+            <span class="sticker" style={`--r:${i % 2 ? 2 : -2}deg`}>
+              {t}
+            </span>
+          ))}
+        </p>
+      )
+    }
+  </div>
+</Tag>
+
+<style>
+  .polaroid {
+    --accent: var(--indigo);
+    position: relative;
+    display: block;
+    background: #fff;
+    color: var(--ink);
+    text-decoration: none;
+    padding: 0.75rem 0.75rem 1rem;
+    border-radius: 4px;
+    box-shadow: 0 8px 24px rgb(0 0 0 / 0.28);
+    transform: rotate(var(--rot));
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+  a.polaroid:hover,
+  a.polaroid:focus-visible {
+    transform: rotate(0deg) translateY(-6px) scale(1.02);
+    box-shadow: 0 16px 32px rgb(0 0 0 / 0.35);
+  }
+  .pin {
+    position: absolute;
+    top: -9px;
+    left: 50%;
+    width: 18px;
+    height: 18px;
+    margin-left: -9px;
+    border-radius: 50%;
+    background: var(--lavender);
+    border: 3px solid var(--indigo);
+    box-shadow: 0 2px 4px rgb(0 0 0 / 0.3);
+  }
+  .frame {
+    aspect-ratio: 4 / 3;
+    background: var(--paper);
+    overflow: hidden;
+  }
+  .lg .frame {
+    aspect-ratio: 1 / 1;
+  }
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .blank {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    background: repeating-linear-gradient(
+      -45deg,
+      var(--paper) 0 14px,
+      #e7e1f5 14px 28px
+    );
+  }
+  .blank span {
+    font-family: var(--font-hand);
+    font-size: 1.5rem;
+    color: var(--indigo);
+    transform: rotate(-4deg);
+  }
+  .meta {
+    padding-top: 0.75rem;
+  }
+  h3 {
+    color: var(--indigo);
+    font-size: 1.1rem;
+  }
+  .meta p {
+    margin: 0.25rem 0 0;
+    font-size: 0.95rem;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.6rem;
+  }
+  .tags .sticker {
+    --bg: #fff;
+    font-size: 0.78rem;
+    padding: 0.15rem 0.6rem;
+  }
+</style>

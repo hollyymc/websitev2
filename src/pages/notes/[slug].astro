@@ -1,0 +1,72 @@
+---
+import Base from '../../layouts/Base.astro';
+import Section from '../../components/Section.astro';
+import { note } from '../../data/note';
+import { withBase } from '../../lib/url';
+
+interface NoteModule {
+  frontmatter: { title: string; date?: string | Date; description?: string };
+  Content: any;
+}
+
+export function getStaticPaths() {
+  const files = import.meta.glob<NoteModule>('../../notes/*.md', { eager: true });
+  const paths = Object.entries(files).map(([file, mod]) => ({
+    params: { slug: file.split('/').pop()!.replace(/\.md$/, '') },
+    props: { kind: 'local' as const, mod },
+  }));
+
+  // Embed mode: one page that frames an external post.
+  if (note.mode === 'embed' && note.embedUrl) {
+    paths.push({
+      params: { slug: note.slug },
+      props: { kind: 'embed' as const, mod: undefined as unknown as NoteModule },
+    });
+  }
+  return paths;
+}
+
+const { kind, mod } = Astro.props;
+const title = kind === 'embed' ? note.title : mod.frontmatter.title;
+const rawDate = kind === 'embed' ? note.date : mod?.frontmatter.date;
+const date = rawDate
+  ? new Date(rawDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+  : undefined;
+const Content = kind === 'local' ? mod.Content : null;
+---
+
+<Base title={title} description={kind === 'local' ? mod.frontmatter.description : note.teaser}>
+  <Section tone="light" label={title}>
+    <p><a href={withBase('/#note')}>← Back</a></p>
+    <h1 class="display">{title}</h1>
+    {date && <p class="hand when">{date}</p>}
+    {
+      kind === 'embed' ? (
+        <>
+          <iframe class="embed" src={note.embedUrl} title={note.title} loading="lazy" />
+          <p class="muted">
+            Not loading? <a href={note.embedUrl} rel="noopener">Open it in a new tab</a>.
+          </p>
+        </>
+      ) : (
+        <div class="prose">
+          <Content />
+        </div>
+      )
+    }
+  </Section>
+</Base>
+
+<style>
+  .when {
+    font-size: 1.5rem;
+    margin: 0 0 1.5rem;
+  }
+  .embed {
+    width: 100%;
+    height: min(80vh, 60rem);
+    border: 2px solid var(--indigo);
+    border-radius: 4px;
+    background: #fff;
+  }
+</style>

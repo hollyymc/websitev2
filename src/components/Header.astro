@@ -1,0 +1,64 @@
+---
+import { site } from '../data/site';
+import { withBase } from '../lib/url';
+
+const nav = [
+  { label: 'Projects', href: '/projects' },
+  { label: 'About', href: '/about' },
+  { label: 'CV', href: '/cv' },
+  { label: 'Contact', href: '/#contact' },
+];
+---
+
+<header class="site-header">
+  <a class="brand" href={withBase('/')}>{site.name}</a>
+  <nav aria-label="Main">
+    <ul>
+      {
+        nav.map((item) => (
+          <li>
+            <a href={withBase(item.href)}>{item.label}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+</header>
+
+<style>
+  .site-header {
+    background: var(--spruce);
+    color: var(--lavender);
+    padding: 1rem var(--gutter);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1.5rem;
+  }
+  .brand {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.25rem;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+  }
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  nav a {
+    font-family: var(--font-display);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  nav a:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+</style>

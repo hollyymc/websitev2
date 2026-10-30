@@ -1,0 +1,109 @@
+---
+import { withBase } from '../lib/url';
+
+export interface Frame {
+  label: string;
+  sub?: string;
+  /** Swap in a photo later: put it in public/ and set e.g. '/about/me.jpg'. */
+  image?: string;
+  imageAlt?: string;
+}
+
+interface Props {
+  frames: Frame[];
+}
+
+const { frames } = Astro.props;
+---
+
+<ol class="strip">
+  {
+    frames.map((f, i) => (
+      <li class={`frame f${i % 3}`}>
+        {f.image ? (
+          <img src={withBase(f.image)} alt={f.imageAlt ?? ''} loading="lazy" />
+        ) : (
+          <div class="glyph">
+            <span class="big">{f.label}</span>
+            {f.sub && <span class="sub">{f.sub}</span>}
+          </div>
+        )}
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .strip {
+    list-style: none;
+    margin: 0;
+    padding: 1.1rem 1.6rem;
+    width: min(100%, 15rem);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    background: #050e0d;
+    border-radius: 6px;
+    box-shadow: 0 12px 32px rgb(0 0 0 / 0.4);
+    position: relative;
+    /* sprocket holes down both edges */
+    background-image:
+      repeating-linear-gradient(
+        to bottom,
+        transparent 0 10px,
+        var(--paper) 10px 22px,
+        transparent 22px 30px
+      ),
+      repeating-linear-gradient(
+        to bottom,
+        transparent 0 10px,
+        var(--paper) 10px 22px,
+        transparent 22px 30px
+      );
+    background-size: 8px 100%, 8px 100%;
+    background-position: 6px 0, calc(100% - 6px) 0;
+    background-repeat: no-repeat;
+    background-color: #050e0d;
+  }
+  .frame {
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: 2px;
+    display: grid;
+    place-items: center;
+    text-align: center;
+  }
+  .f0 {
+    background: var(--indigo);
+    color: var(--lavender);
+  }
+  .f1 {
+    background: var(--forest);
+    color: var(--lavender);
+  }
+  .f2 {
+    background: var(--lavender);
+    color: var(--spruce);
+  }
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(1);
+  }
+  .glyph {
+    display: grid;
+    gap: 0.15rem;
+    padding: 0.5rem;
+  }
+  .big {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.9rem;
+    line-height: 1;
+  }
+  .sub {
+    font-family: var(--font-hand);
+    font-size: 1.05rem;
+  }
+</style>

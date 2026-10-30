@@ -1,0 +1,97 @@
+---
+import Base from '../layouts/Base.astro';
+import Section from '../components/Section.astro';
+import FilmStrip from '../components/FilmStrip.astro';
+import { site } from '../data/site';
+import { beyondCode } from '../data/profile';
+
+// Text-only for now. To use photos later, add `image: '/about/me.jpg'` to a frame.
+const frames = [
+  { label: '</>', sub: 'AI → games' },
+  { label: 'AMS', sub: '52.37°N' },
+  { label: '5–8×', sub: 'rowing a week' },
+  { label: '{ }', sub: 'data + cloud' },
+];
+---
+
+<Base title="About" description="About Holly McHugh: AI, games, data engineering and rowing.">
+  <Section tone="dark" label="About me">
+    <div class="about">
+      <div class="text prose">
+        {site.about.map((p) => <p>{p}</p>)}
+        <p>
+          <a class="btn" href={`mailto:${site.email}`}>Say hi</a>
+        </p>
+      </div>
+      <div class="visual">
+        <FilmStrip frames={frames} />
+        <h1 class="overlay hand" aria-label="About me">
+          <span>about</span>
+          <span>me</span>
+        </h1>
+      </div>
+    </div>
+  </Section>
+
+  <Section tone="light" label="Beyond code">
+    <h2 class="display">Beyond code</h2>
+    <ul class="beyond">
+      {
+        beyondCode.map((b) => (
+          <li>
+            <h3>{b.title}</h3>
+            <p>{b.text}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+</Base>
+
+<style>
+  .about {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    gap: 3rem;
+    align-items: center;
+  }
+  .visual {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    padding-block: 1rem;
+  }
+  .overlay {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: clamp(4.5rem, 14vw, 9rem);
+    line-height: 0.85;
+    color: var(--lavender);
+    text-shadow: 0 2px 0 var(--spruce), 0 0 24px rgb(15 42 40 / 0.6);
+    transform: rotate(-9deg);
+  }
+  .overlay span:last-child {
+    margin-left: 4rem;
+  }
+  .beyond {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 2rem;
+  }
+  .beyond li {
+    border-top: 2px solid var(--indigo);
+    padding-top: 1rem;
+  }
+  .beyond h3 {
+    color: var(--indigo);
+  }
+</style>
